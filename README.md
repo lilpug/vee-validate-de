@@ -1,6 +1,7 @@
 # vee-validate-de
 Vee Validate DE is an Extension plugin for Vee Validate which allows mapping directly to data properties rather than just being form elements.
 
+**JSFiddle:** https://jsfiddle.net/lilpug/ktq6912L/
 
 ## Getting Started
 
