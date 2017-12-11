@@ -47,10 +47,26 @@ var app = new Vue(
   {
     "ValidateAll": function()
     { 
-    this.$validatorDE.ValidateAll().then(function(result)
-    {
-      console.log(result);
-    });
+		this.$validatorDE.ValidateAll().then(function(result)
+		{
+			//If the local validation went successful then fire of the ajax to the server
+			if(result)
+			{		
+				...some form of ajax method.complete(function(data)
+				{
+					//If the ajax was not successful and has validation errors from the server then merge them
+					if(!data.success && data.errors != null)
+					{
+						//Converts it from a json string to an object *if required*
+						var errors = JSON.parse(data.errors);
+					
+						this.$validatorDE.AddAdditionalErrors(errors);
+					}
+				});
+			}
+		
+		  console.log(result);
+		});
     }
   }
 });
@@ -72,6 +88,34 @@ The AddValidation function creates a new Vee Validate rule and links a watch fun
 ```javascript
 function(watchProperty, errorName, validationTypes)
 ```
+
+
+### AddAdditionalErrors
+
+The AddAdditionalErrors function takes an object that holds multiple error validation arrays and merges the errros into the vee validate error bag.
+
+This is a useful function if your looking to merge some server side errors directly into the vee validate without having to do additional work.
+
+ 
+#### Errors Property Structure
+
+**Note:** The keys for the object have to be the same name as the error names that you registered in the AddValidation functions.
+
+```javascript
+var errors = {
+	abc: ['this has failed server side validation!'],
+	abc2: ['this has to be example3!', 'please correct this information']
+}
+```
+
+#### Syntax
+
+* errors - The errors object thats holding all the additional arrays you want to merge into the vee validate error bag
+
+```javascript
+function(errors)
+```
+
 
 ### ValidateAll
 
