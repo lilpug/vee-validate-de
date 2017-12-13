@@ -1,7 +1,7 @@
 /*!
     Title: VeeValidateDE
     URL: https://github.com/lilpug/vee-validate-de
-    Version: 1.1.0
+    Version: 1.2.0
     Author: David Whitehead
     Copyright (c) David Whitehead
     Copyright license: MIT
@@ -94,7 +94,7 @@ var VeeValidateDE =
 								}
 							}
 						}
-					},
+					}.bind(this),
 					
 					//This function validates all the registered fields using the AddValidation function
 					ValidateAll: function(watchProperty, errorName, validationTypes)
