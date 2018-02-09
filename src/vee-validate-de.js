@@ -1,7 +1,7 @@
 /*!
     Title: VeeValidateDE
     URL: https://github.com/lilpug/vee-validate-de
-    Version: 1.2.0
+    Version: 1.3.0
     Author: David Whitehead
     Copyright (c) David Whitehead
     Copyright license: MIT
@@ -31,21 +31,33 @@ var VeeValidateDE =
 					//This function hooks up a vee validator to a specific vuejs data property, it also adds a watching to monitor for any changes and triggers vee validator every time
 					AddValidation: function(watchProperty, errorName, validationTypes)
 					{
-					  //Adds the validation against that specific error name
-					  this.$validator.attach(errorName, validationTypes);
+						//Checks if the parameters have been supplied otherwise outputs the error
+						if(
+							watchProperty != undefined && watchProperty != null && watchProperty != '' &&
+							errorName != undefined && errorName != null && errorName != '' &&
+							validationTypes != undefined && validationTypes != null && validationTypes != '' 
+						  )
+						  {
+							  //Adds the validation against that specific error name
+							  this.$validator.attach(errorName, validationTypes);
 
-					  //Adds the watcher to the supplied property
-					  this.$watch(watchProperty, function(newValue, oldValue) 
-					  {       
-						this.$validator.validate(errorName, newValue);                      
-					  });	
+							  //Adds the watcher to the supplied property
+							  this.$watch(watchProperty, function(newValue, oldValue) 
+							  {       
+								this.$validator.validate(errorName, newValue);                      
+							  });	
 
-					  //Adds the attached validation to the storage location for the ValidateAll function
-					  var storageObject = {      	
-						property: watchProperty,
-						errorName: errorName
-					  };    
-					  this.validationContainer.storage.push(storageObject);
+							  //Adds the attached validation to the storage location for the ValidateAll function
+							  var storageObject = {      	
+								property: watchProperty,
+								errorName: errorName
+							  };    
+							  this.validationContainer.storage.push(storageObject);
+						  }
+						  else
+						  {
+							  console.log("VeeValidateDE Error: some of the parameters for the AddValidation function are null or empty.");
+						  }
 					}.bind(this),
 
 					GetValue: function(property)
@@ -74,30 +86,38 @@ var VeeValidateDE =
 					//Note: good for server side errors being sent back etc
 					AddAdditionalErrors: function(errors)
 					{
-						//Gets all the keys for the error arrays
-						var keys = Object.keys(errors);
-						
-						//If the keys are not empty continue
-						if(keys != undefined && keys != null && keys.length > 0)
-						{
-							//This loops over all the keys in the errors object
-							//Note: the keys should be the name of the field registered in vee validate
-							for(var i = 0; i < keys.length; i++)
+						//Checks we have params before we continue
+						if(errors != undefined && errors != null && errors != '')
+						{						
+							//Gets all the keys for the error arrays
+							var keys = Object.keys(errors);
+							
+							//If the keys are not empty continue
+							if(keys != undefined && keys != null && keys.length > 0)
 							{
-								//Gets the error array for that particular key
-								var errorList = errors[keys[i]];
-								
-								//This loops over the error array supplied and adds them to the vee validate errors using the key
-								for(var j = 0; j < errorList.length; j++)
+								//This loops over all the keys in the errors object
+								//Note: the keys should be the name of the field registered in vee validate
+								for(var i = 0; i < keys.length; i++)
 								{
-									this.errors.add(keys[i], errorList[j]);
+									//Gets the error array for that particular key
+									var errorList = errors[keys[i]];
+									
+									//This loops over the error array supplied and adds them to the vee validate errors using the key
+									for(var j = 0; j < errorList.length; j++)
+									{
+										this.errors.add(keys[i], errorList[j]);
+									}
 								}
 							}
+						}
+						else
+						{
+							console.log("VeeValidateDE Error: the errors parameter for the AddAdditionalErrors function is null or empty.");
 						}
 					}.bind(this),
 					
 					//This function validates all the registered fields using the AddValidation function
-					ValidateAll: function(watchProperty, errorName, validationTypes)
+					ValidateAll: function()
 					{
 					  //Stores the temporary build that is going to be passed to the vee validator
 					  var validationObject = {}
