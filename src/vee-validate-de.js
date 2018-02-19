@@ -1,7 +1,7 @@
 /*!
     Title: VeeValidateDE
     URL: https://github.com/lilpug/vee-validate-de
-    Version: 1.3.0
+    Version: 1.4.0
     Author: David Whitehead
     Copyright (c) David Whitehead
     Copyright license: MIT
@@ -123,7 +123,7 @@ var VeeValidateDE =
 					  var validationObject = {}
 
 					  //Builds the validation object
-					  for(item in this.validationContainer.storage)
+					  for(var item in this.validationContainer.storage)
 					  {
 						//Adds the name and processed value to the validation object
 						validationObject[this.validationContainer.storage[item].errorName] = this.$validatorDE.GetValue(this.validationContainer.storage[item].property);        
